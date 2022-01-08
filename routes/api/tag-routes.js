@@ -70,10 +70,52 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
   // update a tag's name by its `id` value
+  Tag.update(req.body, {
+    where: {
+      id: req.params.id
+    }
+  })
+    .then(() => {
+      return ProductTag.findAll({ where: {tag_id: req.params.id}})
+    })
+    .then(tagTags => {
+      const productTagsId = tagTags.map(({ product_id }) => product_id)
+      const newTagTags = req.body.productIds
+        .filter(product_id => !productTagsId.includes(product_id))
+        .map(product_id => {
+          return {
+            tag_id: req.params.id,
+            product_id
+          }
+        })
+        // figure out which ones to remove
+        const tagTagsToRemove = tagTags.filter(({ product_id }) => !req.body.productIds.includes(product_id))
+        .map(({ id }) => id)
+
+        // run both actions
+        return Promise.all([
+          ProductTag.destroy({ where: { id: tagTagsToRemove } }),
+          Product.bulkCreate(newTagTags)
+        ])
+    })
+    .then(updatedTagTags => res.json(updatedTagTags))
+    .catch(err => {
+      console.log(err)
+      res.status(400).json(err)
+    })
 });
 
 router.delete('/:id', (req, res) => {
-  // delete on tag by its `id` value
+  Tag.destroy({
+    where: {
+      id: req.params.id
+    }
+  })
+    .then(dbTagData => res.json(dbTagData))
+    .catch(err => {
+      console.log(err)
+      res.status(500).json(err)
+    })
 });
 
 module.exports = router;
