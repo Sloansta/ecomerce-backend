@@ -102,7 +102,7 @@ router.put('/:id', (req, res) => {
       id: req.params.id,
     },
   })
-    .then((product) => {
+    .then(() => {
       // find all associated tags from ProductTag
       return ProductTag.findAll({ where: { product_id: req.params.id } });
     })
@@ -139,7 +139,7 @@ router.put('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
   Product.destroy({
     where: {
-      id: req.body.id
+      id: req.params.id
     }
   }).then(dbProductData => res.json(dbProductData))
     .catch(err => {
