@@ -1,5 +1,5 @@
 # ecomerce-backend
-The backend of an ecomerce store
+The backend of an ecomerce store using Sequelize to write the routes and interface with the database.
 
 Starting the server:
 ![gif](./img/ecomerceScriptStart.gif)
