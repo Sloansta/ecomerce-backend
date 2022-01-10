@@ -8,4 +8,4 @@ Seeding the database:
 ![gif](./img/ecomerceStartUp.gif)
 
 Checking the routes: 
-![gif](.img/codingEcomerce1.gif)
+![gif](./img/codingEcomerce1.gif)
